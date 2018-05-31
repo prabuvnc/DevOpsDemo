@@ -22,5 +22,14 @@ pipeline {
             }
             
             }
+		stage ('Build){
+			steps
+			{	
+				script (
+					bat "mvn clean package -DproxySet=true -DproxyHost=www-proxy.us.oracle.com -DproxyPort=80 org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.host.url=http://localhost:9000"
+				)
+			}
+		
+		}
     }
 }
