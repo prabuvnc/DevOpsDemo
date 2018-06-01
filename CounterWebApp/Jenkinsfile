@@ -25,8 +25,21 @@ pipeline {
 		stage ('Build'){
 			steps
 			{	
-				script (
-					bat "mvn clean package -DproxySet=true -DproxyHost=www-proxy.us.oracle.com -DproxyPort=80 org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.host.url=http://localhost:9000"
+				bat 'mvn clean package -DproxySet=true -DproxyHost=www-proxy.us.oracle.com -DproxyPort=80 org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.host.url=http://localhost:9000'
+				nexusArtifactUploader(
+					nexusVersion: 'nexus3',
+					protocol: 'http',
+					nexusUrl: 'localhost:9081',
+					groupId: 'com.mkyong',
+					version: '1.0-SNAPSHOT',
+					repository: 'maven-snapshots',
+					credentialsId: '5363d51d-766c-4741-aca8-e5a4d5eec2cb',
+					artifacts: [
+					[artifactId: 'CounterWebApp',
+					classifier: '',
+					file: 'target/CounterWebApp.war',
+					type: 'war']
+					]
 				)
 			}
 		
